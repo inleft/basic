@@ -29,33 +29,44 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => '博客',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
+    $leftMenus = [
+        ['label' => '首页', 'url' => ['/site/index']],
+        ['label' => '文章', 'url' => ['/site/about']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $rightMenus[] = ['label' => '注册', 'url' => ['/site/signup']];
+        $rightMenus[] = ['label' => '登录', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
+        $rightMenus[]=[
+                'label'=>'<img src="'.Yii::$app->params['avatar']['small'].'" alt="\' . Yii::$app->user->identity->username .\'"/> ',
+                'linkOptions'=>['class'=>'avatar'],
+                'items'=>[
+                        ['label'=>'<i class="fa fa-sign-out"></i> 退出','url'=>['/site/logout'],'linkOptions'=>['data-method'=>'post']]
+                ],
+        ];
+//        $rightMenus[] = '<li>'
+//            . Html::beginForm(['/site/logout'], 'post')
+//            . Html::submitButton(
+//                '<img src="/frontend/web/statics/images/avatar/17-121206101T9.jpg" alt="' . Yii::$app->user->identity->username .'"/> ',
+//                ['class' => 'avatar']
+//            )
+//            . Html::endForm()
+//            . '</li>';
     }
     echo Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-left'],
+        'items' => $leftMenus,
+    ]);
+    echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
+        'encodeLabels'=>false,
+        'items' => $rightMenus,
     ]);
     NavBar::end();
     ?>
